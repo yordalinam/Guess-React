@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Modal from './Modal.jsx'
 
 import './App.css'
@@ -18,15 +18,17 @@ function App() {
   //ATTEMPTED GUESS SHOULD TAKE THE NUMBER FROM THE INPUT 
   //create score and highscore!
 
-  function generateSecretNumber() {
-    console.log(secretNumber)
-    console.log(screenElements)
+  // function generateSecretNumber() {
+  //   console.log('wtf !?  ' ,  screenElements)
 
+
+
+  //   console.log(secretNumber, '  tuka!?')
+  // }
+
+  useEffect(() => {
     if (screenElements === 'EasyMode') {
       secretNumber = Math.trunc(Math.random() * 20) + 1;
-      console.log(secretNumber)
-      console.log('vliza v easy')
-
     }
 
     if (screenElements === 'MediumMode') {
@@ -37,13 +39,11 @@ function App() {
       secretNumber = Math.trunc(Math.random() * 60) + 1;
 
     }
-  }
-
+  }, [screenElements])
 
 
 
   function checkFunction() {
-    console.log('check')
 
     if (!attemptedGuess) {
       //  <p id="message" className="message">⛔No Number!</p>
@@ -68,7 +68,7 @@ function App() {
   const startingScreen =
     <>
       <div className='header'>
-        <h1>{screenElements} Guess My Number!</h1>
+        <h1> Guess My Number!</h1>
         <div className="number">?</div>
         <p className="between">Are you ready?</p>
       </div>
@@ -77,7 +77,7 @@ function App() {
         <div className='left'>
           <button onClick={startGame} className='instructions-button'>Start  game!</button>
           {
-            modal ? <Modal screenElements={screenElements} generateSecretNumber={generateSecretNumber} screenElementsSetter={screenElementsSetter} modalSetter={modalSetter} modal={modal}></Modal> : !modal
+            modal ? <Modal screenElements={screenElements} screenElementsSetter={screenElementsSetter} modalSetter={modalSetter} modal={modal}></Modal> : !modal
           }
           <div className='overlay hidden'></div>
         </div>
@@ -116,12 +116,9 @@ function App() {
 
       <div className='leftAndRight'>
         {
-          modal ? <Modal screenElements={screenElements} screenElementsSetter={screenElementsSetter} generateSecretNumber={generateSecretNumber} modalSetter={modalSetter} modal={modal}></Modal> : !modal
+          modal ? <Modal screenElements={screenElements} screenElementsSetter={screenElementsSetter} modalSetter={modalSetter} modal={modal}></Modal> : !modal
         }
         <div className='left'>
-          {/* {
-            modal ? <Modal screenElements={screenElements} secretNumber={secretNumber} generateSecretNumber={generateSecretNumber} secretNumberSetter={secretNumberSetter} modalSetter={modalSetter} modal={modal}></Modal> : !modal
-          } */}
           <div className='overlay hidden'></div>
           <input id="input " type="number" className="guess" />
           <button onClick={checkFunction} className="btn check">Check!</button>
@@ -140,7 +137,6 @@ function App() {
 
 
   function startGame() {
-    console.log('vliza')
     modalSetter(() => {
       return !modal
     })

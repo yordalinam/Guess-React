@@ -9,20 +9,13 @@ function Modal(props) {
 
 
                 <button onClick={() => {
-
                     props.screenElementsSetter(() => {
-
                         return 'EasyMode'
                     })
 
                     props.modalSetter(() => {
                         return ''
                     })
-
-                    props.generateSecretNumber()
-
-
-
                 }} className="little easy">Easy</button>
 
 
