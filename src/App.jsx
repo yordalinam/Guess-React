@@ -10,7 +10,10 @@ function App() {
   const [modal, modalSetter] = useState(false);
 
   //const [secretNumber, secretNumberSetter] = useState();
-  const [attemptedGuess, attemptedGuessSetter] = useState();
+  const [attemptedGuess, attemptedGuessSetter] = useState("");
+  const [score, scoreSetter] = useState(20);
+  const [highScore, setHighScore] = useState(0);
+  const [winLoseShow, setWinLoseShow] = useState(<p id="message" className="message">Start guessing...</p>);
 
 
   //Need to create a random SECRET NUMBER - secretNumber
@@ -41,27 +44,40 @@ function App() {
     }
   }, [screenElements])
 
+  useEffect(() => {
+    setHighScore(() => {
+      if(localStorage.getItem('guessTheNumber')){
+        return parseInt(localStorage.getItem('guessTheNumber'))
+      }
+      return 0
+    })
+  }, [])
+
 
 
   function checkFunction() {
-
+    let msg = <p id="message" className="message">Start guessing...</p>
     if (!attemptedGuess) {
-      //  <p id="message" className="message">⛔No Number!</p>
+      msg = <p id="message" className="message">⛔No Number!</p>
     }
-    else if (attemptedGuess === secretNumber) {
-      // <p id="message" className="message">👏Correct Number!</p>
-      //          if (score > highScore) 
-      //            highScore = score;
+    else if (parseInt(attemptedGuess) === secretNumber) {
+      msg = <p id="message" className="message">👏Correct Number!</p>
+      if(score>highScore){
+        localStorage.setItem('guessTheNumber', score)
+        setHighScore(score);
+      }
+
     }
-    else if (attemptedGuess !== secretNumber) {
+    else if (parseInt(attemptedGuess) !== secretNumber) {      
       if (score > 0) {
-        // message.textContent = guess>secretNumber? '🙀Too high!': '🙀Too low!';
-        score -= 1
+        attemptedGuess>secretNumber? msg=<p id="message" className="message">🙀Too high!</p>: msg=<p id="message" className="message">🙀Too low!</p>;
+        scoreSetter(score-1)
       }
       if (score <= 0) {
-        // message.textContent = '💥💥💥You lost the game!';
+        msg = '💥💥💥You lost the game!';
       }
     }
+    setWinLoseShow(msg)
   }
 
 
@@ -86,7 +102,7 @@ function App() {
           <p id="message" className="message">Start guessing...</p>
           <p className="label-score">💯 Score: <span className="score">20</span></p>
           <p className="label-highscore">
-            🥇 Highscore: <span className="highscore">0</span>
+            🥇 Highscore: <span className="highscore">{highScore}</span>
           </p>
         </section>
       </div>
@@ -120,15 +136,17 @@ function App() {
         }
         <div className='left'>
           <div className='overlay hidden'></div>
-          <input id="input " type="number" className="guess" />
+          <input value={attemptedGuess} onChange={(e) => {
+            attemptedGuessSetter(e.target.value)
+          }} id="input " type="number" className="guess" />
           <button onClick={checkFunction} className="btn check">Check!</button>
         </div>
 
         <section className="right">
-          <p id="message" className="message">Start guessing...</p>
-          <p className="label-score">💯 Score: <span className="score">20</span></p>
+          {winLoseShow}
+          <p className="label-score">💯 Score: <span className="score">{score}</span></p>
           <p className="label-highscore">
-            🥇 Highscore: <span className="highscore">0</span>
+            🥇 Highscore: <span className="highscore">{highScore}</span>
           </p>
         </section>
         <p className="mode"></p>
